@@ -2,14 +2,23 @@ package com.fonrouge
 
 import net.sourceforge.tess4j.Tesseract
 import java.io.File
-import java.net.URL
 
-fun main() {
+fun main(vararg args: String) {
     Tesseract().apply {
-        setDatapath("/usr/share/tesseract-ocr/5/tessdata")
+        when (args.getOrNull(0)) {
+            "linux" -> {
+                setDatapath("/usr/share/tesseract-ocr/5/tessdata")
+            }
+
+            "macOsX" -> {
+                System.setProperty("jna.library.path", "/usr/local/lib")
+                setDatapath("/usr/local/Cellar/tesseract/5.4.1_1/share/tessdata")
+            }
+            else -> return
+        }
         setLanguage("spa")
     }.run {
-        this::class.java.getResource("/OrdenCompraDirectos24101210911321.pdf")?.let { url ->
+        this::class.java.getResource("/OrdenCompra24101510919065.pdf")?.let { url ->
             val file = File(url.path)
             println("Starting ...")
             if (file.exists()) {
